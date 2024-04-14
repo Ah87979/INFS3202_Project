@@ -3,39 +3,37 @@ from flask_restful import Resource
 from http import HTTPStatus
 
 from utils import hash_password
-from models.owner import User
+from models.owner import Owner
 
 
-class UserListResource(Resource):
+class OwnerListResource(Resource):
     def post(self):
         json_data = request.get_json()
 
-        username = json_data.get('username')
-        email = json_data.get('email')
-        non_hash_password = json_data.get('password')
+        name = json_data.get('name')
+        # email = json_data.get('email')
+        # non_hash_password = json_data.get('password')
 
-        # Do not add the user if the username is taken
-        if User.get_by_username(username):
-            return {'message': 'username already used'}, HTTPStatus.BAD_REQUEST
+        # Do not add the owner if the name is taken
+        if Owner.get_by_name(name):
+            return {'message': 'name already used'}, HTTPStatus.BAD_REQUEST
 
-        # Do not add the user if the email is taken
-        if User.get_by_email(email):
-            return {'message': 'email already used'}, HTTPStatus.BAD_REQUEST
+        # Do not add the owner if the email is taken
+        # if Owner.get_by_email(email):
+        #     return {'message': 'email already used'}, HTTPStatus.BAD_REQUEST
 
-        password = hash_password(non_hash_password)
+        # password = hash_password(non_hash_password)
 
-        user = User(
-            username=username,
-            email=email,
-            password=password
+        owner = Owner(
+            name=name
         )
 
-        user.save()
+        owner.save()
 
         data = {
-            'id': user.id,
-            'username': user.username,
-            'email': user.email
+            'id': owner.id,
+            'name': owner.name,
+            'email': owner.email
         }
 
         return data, HTTPStatus.CREATED

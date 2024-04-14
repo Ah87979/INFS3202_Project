@@ -3,56 +3,58 @@ from flask import request
 from flask_restful import Resource
 from http import HTTPStatus
 
-from models.vehicle import Recipe
+from models.vehicle import Vehicle
 
 
-class RecipeListResource(Resource):
+class VehicleListResource(Resource):
 
     def get(self):
-        data = Recipe.get_all()
+        data = Vehicle.get_all()
 
         if data is None:
-            return {'message': 'recipe not found'}, HTTPStatus.NOT_FOUND
+            return {'message': 'vehicle not found'}, HTTPStatus.NOT_FOUND
 
         return {'data': data}, HTTPStatus.OK
 
     def post(self):
         data = request.get_json()
 
-        recipe = Recipe(name=data['name'],
-                        description=data['description'],
-                        num_of_servings=data['num_of_servings'],
-                        cook_time=data['cook_time'],
-                        directions=data['directions'],
-                        user_id=data["user_id"])
-        recipe.save()
+        vehicle = Vehicle(
+            vehicle_id=data['vehicle_id'],
+            manufacturer=data['manufacturer'],
+            model=data['model'],
+            year=data['year'],
+            registration_date=data['registration_date'],
+            owner_id=data['owner_id']
+        )
+        vehicle.save()
 
-        return recipe.data, HTTPStatus.CREATED
+        return vehicle.data, HTTPStatus.CREATED
 
 
-class RecipeResource(Resource):
+class VehicleResource(Resource):
 
-    def get(self, recipe_id):
-        recipe = Recipe.get_by_id(recipe_id)
+    def get(self, vehicle_id):
+        vehicle = Vehicle.get_by_id(vehicle_id)
 
-        if recipe is None:
-            return {'message': 'recipe not found'}, HTTPStatus.NOT_FOUND
+        if vehicle is None:
+            return {'message': 'vehicle not found'}, HTTPStatus.NOT_FOUND
 
-        return recipe.data, HTTPStatus.OK
+        return vehicle.data, HTTPStatus.OK
 
-    def put(self, recipe_id):
+    def put(self, vehicle_id):
         data = request.get_json()
 
-        return Recipe.update(recipe_id, data)
+        return Vehicle.update(vehicle_id, data)
 
-    def delete(self, recipe_id):
-        return Recipe.delete(recipe_id)
+    def delete(self, vehicle_id):
+        return Vehicle.delete(vehicle_id)
 
 
-class RecipePublishResource(Resource):
+class VehicleRegisterResource(Resource):
 
-    def put(self, recipe_id):
-        return Recipe.publish(recipe_id)
+    def put(self, vehicle_id):
+        return Vehicle.publish(vehicle_id)
 
-    def delete(self, recipe_id):
-        return Recipe.un_publish(recipe_id)
+    def delete(self, vehicle_id):
+        return Vehicle.un_publish(vehicle_id)
