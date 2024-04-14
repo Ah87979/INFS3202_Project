@@ -19,11 +19,6 @@ class Owner(db.Model):
     def get_by_username(cls, username):
         return cls.query.filter_by(username=username).first()
 
-    # A static method to get an owner data by the email
-    @classmethod
-    def get_by_email(cls, email):
-        return cls.query.filter_by(email=email).first()
-
     # A static method to get an owner data by the id
     @classmethod
     def get_name_by_id(cls, owner_id):
