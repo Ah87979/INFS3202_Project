@@ -31,9 +31,9 @@ class OwnerListResource(Resource):
         owner.save()
 
         data = {
-            'id': owner.id,
+            'owner_id': owner.owner_id,
             'name': owner.name,
-            'email': owner.email
+            # 'email': owner.email
         }
 
         return data, HTTPStatus.CREATED

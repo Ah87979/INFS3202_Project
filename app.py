@@ -31,7 +31,7 @@ def register_resources(app):
 
     api.add_resource(OwnerListResource, '/owners')
     api.add_resource(VehicleListResource, '/vehicles')
-    api.add_resource(VehicleResource, '/vehicles/<int:recipe_id>')
+    api.add_resource(VehicleResource, '/vehicles/<int:vehicle_id>')
     api.add_resource(VehicleRegisterResource, '/vehicles/<int:vehicle_id>/register')
 
 

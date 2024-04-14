@@ -8,20 +8,18 @@ from http import HTTPStatus
 class Vehicle(db.Model):
     __tablename__ = 'vehicle'
 
-    id = db.Column(db.Integer, primary_key=True)
-    vehicle_id = db.Column(db.String(100), nullable=False)
+    vehicle_id = db.Column(db.Integer, primary_key=True)
     manufacturer = db.Column(db.String(200), nullable=False)
     model = db.Column(db.String(100), nullable=False)
     year = db.Column(db.Integer)
     registration_date = db.Column(db.DateTime(), nullable=False)
     is_register = db.Column(db.Boolean(), default=False)
     
-    owner_id = db.Column(db.Integer(), db.ForeignKey("owner.id"))
+    owner_id = db.Column(db.Integer(), db.ForeignKey("owner.owner_id"))
 
     @property
     def data(self):
         return {
-            'id': self.id,
             'vehicle_id': self.vehicle_id,
             'manufacturer': self.manufacturer,
             'model': self.model,
