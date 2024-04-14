@@ -20,7 +20,7 @@ class Owner(db.Model):
     # A static method to get an owner data by the id
     @classmethod
     def get_name_by_id(cls, owner_id):
-        return cls.query.filter_by(id=owner_id).first().name
+        return cls.query.filter_by(owner_id=owner_id).first().name
 
     # Save the record
     def save(self):

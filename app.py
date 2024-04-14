@@ -7,7 +7,7 @@ from config import Config
 from extensions import db
 
 from resources.owner import OwnerListResource
-from resources.vehicle import VehicleListResource, VehicleResource, VehicleRegisterResource
+from resources.vehicle import VehicleListResource, VehicleResource
 
 
 def create_app():
@@ -32,7 +32,6 @@ def register_resources(app):
     api.add_resource(OwnerListResource, '/owners')
     api.add_resource(VehicleListResource, '/vehicles')
     api.add_resource(VehicleResource, '/vehicles/<int:vehicle_id>')
-    api.add_resource(VehicleRegisterResource, '/vehicles/<int:vehicle_id>/register')
 
 
 if __name__ == '__main__':

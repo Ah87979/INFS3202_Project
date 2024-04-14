@@ -49,12 +49,3 @@ class VehicleResource(Resource):
 
     def delete(self, vehicle_id):
         return Vehicle.delete(vehicle_id)
-
-
-class VehicleRegisterResource(Resource):
-
-    def put(self, vehicle_id):
-        return Vehicle.publish(vehicle_id)
-
-    def delete(self, vehicle_id):
-        return Vehicle.un_publish(vehicle_id)

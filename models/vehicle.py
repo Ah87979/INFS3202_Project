@@ -13,7 +13,6 @@ class Vehicle(db.Model):
     model = db.Column(db.String(100), nullable=False)
     year = db.Column(db.Integer)
     registration_date = db.Column(db.DateTime(), nullable=False)
-    is_register = db.Column(db.Boolean(), default=False)
     
     owner_id = db.Column(db.Integer(), db.ForeignKey("owner.owner_id"))
 
@@ -24,7 +23,7 @@ class Vehicle(db.Model):
             'manufacturer': self.manufacturer,
             'model': self.model,
             'year': self.year,
-            'registration_date': self.registration_date.isoformat(),
+            'registration_date': self.registration_date,
             'Owner': Owner.get_name_by_id(self.owner_id)
         }
 
@@ -34,7 +33,7 @@ class Vehicle(db.Model):
 
     @classmethod
     def get_all(cls):
-        r = cls.query.filter_by(is_register=True).all()
+        r = cls.query.all()
 
         result = []
 
@@ -45,11 +44,11 @@ class Vehicle(db.Model):
 
     @classmethod
     def get_by_id(cls, id):
-        return cls.query.filter((cls.id == id) & (cls.is_register == True)).first()
+        return cls.query.filter(cls.id == id).first()
     
     @classmethod
     def get_by_id_n(cls, id):
-        x = cls.query.filter((cls.id == id) & (cls.is_register == False)).first()
+        x = cls.query.filter(cls.id == id).first()
         return x
 
     @classmethod
@@ -77,23 +76,3 @@ class Vehicle(db.Model):
         db.session.commit()
 
         return {}, HTTPStatus.NO_CONTENT
-
-    @classmethod
-    def register(cls, vehicle_id):
-        vehicle = Vehicle.get_by_id_n(vehicle_id)
-        if vehicle is None:
-            return {'message': 'vehicle not found'}, HTTPStatus.NOT_FOUND
-
-        vehicle.is_register = True
-        db.session.commit()
-        return vehicle.data, HTTPStatus.OK
-
-    @classmethod
-    def un_register(cls, vehicle_id):
-        vehicle = Vehicle.get_by_id(vehicle_id)
-        if vehicle is None:
-            return {'message': 'vehicle not found'}, HTTPStatus.NOT_FOUND
-
-        vehicle.is_register = False
-        db.session.commit()
-        return vehicle.data, HTTPStatus.OK
