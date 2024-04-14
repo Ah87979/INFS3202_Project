@@ -8,27 +8,25 @@ from http import HTTPStatus
 class Vehicle(db.Model):
     __tablename__ = 'vehicle'
 
-    vehicle_id = db.Column(db.Integer, primary_key=True)
-    manufacturer = db.Column(db.String(100), nullable=False)
-    model = db.Column(db.String(200))
+    id = db.Column(db.Integer, primary_key=True)
+    vehicle_id = db.Column(db.String(100), nullable=False)
+    manufacturer = db.Column(db.String(200), nullable=False)
+    model = db.Column(db.String(100), nullable=False)
     year = db.Column(db.Integer)
-    cook_time = db.Column(db.Integer)
-    directions = db.Column(db.String(1000))
+    registration_date = db.Column(db.DateTime(), nullable=False)
     is_register = db.Column(db.Boolean(), default=False)
-    created_at = db.Column(db.DateTime(), nullable=False, server_default=db.func.now())
-    updated_at = db.Column(db.DateTime(), nullable=False, server_default=db.func.now(), onupdate=db.func.now())
-
+    
     owner_id = db.Column(db.Integer(), db.ForeignKey("owner.id"))
 
     @property
     def data(self):
         return {
             'id': self.id,
-            'name': self.name,
-            'description': self.description,
-            'num_of_servings': self.num_of_servings,
-            'cook_time': self.cook_time,
-            'directions': self.directions,
+            'vehicle_id': self.vehicle_id,
+            'manufacturer': self.manufacturer,
+            'model': self.model,
+            'year': self.year,
+            'registration_date': self.registration_date.isoformat(),
             'Owner': Owner.get_name_by_id(self.owner_id)
         }
 
@@ -38,7 +36,7 @@ class Vehicle(db.Model):
 
     @classmethod
     def get_all(cls):
-        r = cls.query.filter_by(is_publish=True).all()
+        r = cls.query.filter_by(is_register=True).all()
 
         result = []
 
@@ -49,11 +47,11 @@ class Vehicle(db.Model):
 
     @classmethod
     def get_by_id(cls, id):
-        return cls.query.filter((cls.id == id) & (cls.is_publish == True)).first()
+        return cls.query.filter((cls.id == id) & (cls.is_register == True)).first()
     
     @classmethod
     def get_by_id_n(cls, id):
-        x = cls.query.filter((cls.id == id) & (cls.is_publish == False)).first()
+        x = cls.query.filter((cls.id == id) & (cls.is_register == False)).first()
         return x
 
     @classmethod
@@ -63,11 +61,11 @@ class Vehicle(db.Model):
         if vehicle is None:
             return {'message': 'vehicle not found'}, HTTPStatus.NOT_FOUND
 
-        vehicle.name = data['name']
-        vehicle.description = data['description']
-        vehicle.num_of_servings = data['num_of_servings']
-        vehicle.cook_time = data['cook_time']
-        vehicle.directions = data['directions']
+        vehicle.vehicle_id = data['vehicle_id']
+        vehicle.manufacturer = data['manufacturer']
+        vehicle.model = data['model']
+        vehicle.year = data['year']
+        vehicle.registration_date = data['registration_date']
         db.session.commit()
         return vehicle.data, HTTPStatus.OK
 
@@ -83,21 +81,21 @@ class Vehicle(db.Model):
         return {}, HTTPStatus.NO_CONTENT
 
     @classmethod
-    def publish(cls, vehicle_id):
+    def register(cls, vehicle_id):
         vehicle = Vehicle.get_by_id_n(vehicle_id)
         if vehicle is None:
             return {'message': 'vehicle not found'}, HTTPStatus.NOT_FOUND
 
-        vehicle.is_publish = True
+        vehicle.is_register = True
         db.session.commit()
         return vehicle.data, HTTPStatus.OK
 
     @classmethod
-    def un_publish(cls, vehicle_id):
+    def un_register(cls, vehicle_id):
         vehicle = Vehicle.get_by_id(vehicle_id)
         if vehicle is None:
             return {'message': 'vehicle not found'}, HTTPStatus.NOT_FOUND
 
-        vehicle.is_publish = False
+        vehicle.is_register = False
         db.session.commit()
         return vehicle.data, HTTPStatus.OK
