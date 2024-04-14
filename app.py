@@ -1,4 +1,3 @@
-
 import sys
 from flask import Flask
 from flask_migrate import Migrate
@@ -7,8 +6,8 @@ from flask_restful import Api
 from config import Config
 from extensions import db
 
-from resources.user import UserListResource
-from resources.recipe import RecipeListResource, RecipeResource, RecipePublishResource
+from resources.owner import OwnerListResource
+from resources.vehicle import VehicleListResource, VehicleResource, VehicleRegisterResource
 
 
 def create_app():
@@ -30,11 +29,10 @@ def register_extensions(app):
 def register_resources(app):
     api = Api(app)
 
-    api.add_resource(UserListResource, '/users')
-    api.add_resource(RecipeListResource, '/recipes')
-    api.add_resource(RecipeResource, '/recipes/<int:recipe_id>')
-    api.add_resource(RecipePublishResource, '/recipes/<int:recipe_id>/publish')
-
+    api.add_resource(OwnerListResource, '/owners')
+    api.add_resource(VehicleListResource, '/vehicles')
+    api.add_resource(VehicleResource, '/vehicles/<int:recipe_id>')
+    api.add_resource(VehicleRegisterResource, '/vehicles/<int:vehicle_id>/register')
 
 
 if __name__ == '__main__':

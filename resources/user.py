@@ -3,7 +3,7 @@ from flask_restful import Resource
 from http import HTTPStatus
 
 from utils import hash_password
-from models.user import User
+from models.owner import User
 
 
 class UserListResource(Resource):
