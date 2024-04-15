@@ -7,6 +7,7 @@ from models.owner import Owner
 
 
 class OwnerListResource(Resource):
+    
     def post(self):
         json_data = request.get_json()
 
@@ -28,3 +29,13 @@ class OwnerListResource(Resource):
         }
 
         return data, HTTPStatus.CREATED
+
+class OwnerResource(Resource):
+
+    def get(self, owner_id):
+        owner = Owner.get_by_id(owner_id)
+
+        if owner is None:
+            return {'message': 'owner not found'}, HTTPStatus.NOT_FOUND
+
+        return owner.data, HTTPStatus.OK
