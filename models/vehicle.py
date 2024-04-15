@@ -14,7 +14,7 @@ class Vehicle(db.Model):
     year = db.Column(db.Integer)
     registration_date = db.Column(db.DateTime(), nullable=False, server_default=db.func.now())
     
-    owner_id = db.Column(db.Integer(), db.ForeignKey("owner_id"))
+    owner_id = db.Column(db.Integer(), db.ForeignKey("owner.owner_id"))
 
     @property
     def data(self):
@@ -23,7 +23,6 @@ class Vehicle(db.Model):
             'manufacturer': self.manufacturer,
             'model': self.model,
             'year': self.year,
-            'registration_date': self.registration_date,
             'Owner': Owner.get_name_by_id(self.owner_id)
         }
 
@@ -44,16 +43,11 @@ class Vehicle(db.Model):
 
     @classmethod
     def get_by_id(cls, id):
-        return cls.query.filter(cls.id == id).first()
-    
-    @classmethod
-    def get_by_id_n(cls, id):
-        x = cls.query.filter(cls.id == id).first()
-        return x
+        return cls.query.filter(cls.vehicle_id == id).first()
 
     @classmethod
     def update(cls, id, data):
-        vehicle = cls.query.filter(cls.id == id).first()
+        vehicle = cls.query.filter(cls.vehicle_id == id).first()
 
         if vehicle is None:
             return {'message': 'vehicle not found'}, HTTPStatus.NOT_FOUND
@@ -62,13 +56,12 @@ class Vehicle(db.Model):
         vehicle.manufacturer = data['manufacturer']
         vehicle.model = data['model']
         vehicle.year = data['year']
-        vehicle.registration_date = data['registration_date']
         db.session.commit()
         return vehicle.data, HTTPStatus.OK
 
     @classmethod
     def delete(cls, id):
-        vehicle = cls.query.filter(cls.id == id).first()
+        vehicle = cls.query.filter(cls.vehicle_id == id).first()
         if vehicle is None:
             return {'message': 'vehicle not found'}, HTTPStatus.NOT_FOUND
 
