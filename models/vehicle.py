@@ -12,9 +12,9 @@ class Vehicle(db.Model):
     manufacturer = db.Column(db.String(200), nullable=False)
     model = db.Column(db.String(100), nullable=False)
     year = db.Column(db.Integer)
-    registration_date = db.Column(db.String(10), nullable=False)
+    registration_date = db.Column(db.DateTime(), nullable=False, server_default=db.func.now())
     
-    owner_id = db.Column(db.Integer(), db.ForeignKey("owner.owner_id"))
+    owner_id = db.Column(db.Integer(), db.ForeignKey("owner_id"))
 
     @property
     def data(self):

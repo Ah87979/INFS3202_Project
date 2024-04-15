@@ -24,7 +24,6 @@ class VehicleListResource(Resource):
             manufacturer=data['manufacturer'],
             model=data['model'],
             year=data['year'],
-            registration_date=data['registration_date'],
             owner_id=data['owner_id']
         )
         vehicle.save()

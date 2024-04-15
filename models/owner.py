@@ -12,17 +12,43 @@ class Owner(db.Model):
 
     vehicles = db.relationship('Vehicle', backref='owner')
 
-    # A static method to get an owner data by the name
+    @property
+    def data(self):
+        return {
+            'owner_id': self.owner_id,
+            'name': self.name,
+            'address': self.address,
+            'phone': self.phone,
+            'license_no': self.license_no
+        }
+
+    def save(self):
+        db.session.add(self)
+        db.session.commit()
+
+    @classmethod
+    def get_all(cls):
+        r = cls.query.all()
+
+        result = []
+
+        for i in r:
+            result.append(i.data)
+
+        return result
+    
     @classmethod
     def get_by_name(cls, name):
         return cls.query.filter_by(name=name).first()
 
-    # A static method to get an owner data by the id
+    @classmethod
+    def get_by_id(cls, owner_id):
+        return cls.query.filter_by(owner_id=owner_id).first()
+    
     @classmethod
     def get_name_by_id(cls, owner_id):
         return cls.query.filter_by(owner_id=owner_id).first().name
 
-    # Save the record
     def save(self):
         db.session.add(self)
         db.session.commit()

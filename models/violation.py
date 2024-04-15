@@ -5,12 +5,11 @@ class Violation(db.Model):
     __tablename__ = 'violation'
 
     violation_id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(80), nullable=False, unique=True)
-    address = db.Column(db.String(200), nullable=False, unique=True)
-    phone = db.Column(db.Integer)
-    license_no = db.Column(db.Integer, nullable=False, unique=True)
-
-    vehicles = db.relationship('Vehicle', backref='violation')
+    violation_date = db.Column(db.String(80), nullable=False, unique=True)
+    violation_type = db.Column(db.String(200), nullable=False)
+    violation_status = db.Column(db.String(80), nullable=False)
+    
+    vehicle_id = db.Column(db.Integer(), db.ForeignKey("vehicle.vehicle_id"))
 
     # A static method to get an violation data by the name
     @classmethod
@@ -19,7 +18,7 @@ class Violation(db.Model):
 
     # A static method to get an violation data by the id
     @classmethod
-    def get_name_by_id(cls, violation_id):
+    def get_by_id(cls, violation_id):
         return cls.query.filter_by(violation_id=violation_id).first().name
 
     # Save the record
